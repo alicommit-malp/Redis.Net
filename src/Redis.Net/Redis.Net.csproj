@@ -3,6 +3,17 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Multi context Redis client library for .Net Core</Title>
+        <Authors>Ali Alp</Authors>
+        <Description>Multi context Redis client library for .Net Core</Description>
+        <Copyright>Null</Copyright>
+        <PackageProjectUrl>https://github.com/alicommit-malp/Redis.Net</PackageProjectUrl>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/alicommit-malp/Redis.Net/master/LICENSE</PackageLicenseUrl>
+        <licence>MIT</licence>
+        <RepositoryType>GIT</RepositoryType>
+        <PackageTags>Redis </PackageTags>
+        <PackageId>RedisNet</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
