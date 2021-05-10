@@ -10,5 +10,10 @@ namespace Redis.Net.Options
         /// <see cref="ServiceLifetime"/>
         /// </summary>
         public ServiceLifetime ServiceLifetimeScope { get; set; } = ServiceLifetime.Singleton;
+        
+        /// <summary>
+        /// <see cref="CompressionOption"/>
+        /// </summary>
+        public CompressionOption CompressionOption { get; set; }
     }
 }

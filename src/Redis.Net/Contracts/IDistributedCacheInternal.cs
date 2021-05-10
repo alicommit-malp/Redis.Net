@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Redis.Net.Options;
@@ -104,5 +105,107 @@ namespace Redis.Net.Contracts
         /// <param name="token"><see cref="CancellationToken"/></param>
         /// <returns>true if the operation was successful</returns>
         public Task<bool> IsKeyExistAsync(string key, CancellationToken token = new CancellationToken());
+        
+        
+        /// <summary>
+        /// Asynchronously Get all the keys which match the given pattern
+        /// </summary>
+        /// <param name="pattern">string pattern check out the remark</param>
+        /// <remarks>
+        /// Supported glob-style patterns:
+        /// h?llo matches hello, hallo and hxllo
+        /// h*llo matches hllo and heeeello
+        /// h[ae]llo matches hello and hallo, but not hillo
+        /// h[^e]llo matches hallo, hbllo, ... but not hello
+        /// h[a-b]llo matches hallo and hbllo
+        /// Use \ to escape special characters if you want to match them verbatim.
+        /// </remarks>
+        /// <param name="token"><see cref="CancellationToken"/></param>
+        /// <returns><see cref="IEnumerable{T}"/> of string a list of string of redis keys</returns>
+        public Task<IEnumerable<string>>
+            GetKeysAsync(string pattern, CancellationToken token = new CancellationToken());
+
+        /// <summary>
+        /// Get all the keys which match the given pattern
+        /// </summary>
+        /// <param name="pattern">string pattern check out the remark</param>
+        /// <remarks>
+        /// Supported glob-style patterns:
+        /// h?llo matches hello, hallo and hxllo
+        /// h*llo matches hllo and heeeello
+        /// h[ae]llo matches hello and hallo, but not hillo
+        /// h[^e]llo matches hallo, hbllo, ... but not hello
+        /// h[a-b]llo matches hallo and hbllo
+        /// Use \ to escape special characters if you want to match them verbatim.
+        /// </remarks>
+        /// <returns><see cref="IEnumerable{T}"/> of string a list of string of redis keys</returns>
+        public IEnumerable<string> GetKeys(string pattern);
+        
+        
+        /// <summary>
+        /// Asynchronously remove all the keys which match the given pattern
+        /// </summary>
+        /// <param name="pattern">string pattern check out the remark</param>
+        /// <remarks>
+        /// Supported glob-style patterns:
+        /// h?llo matches hello, hallo and hxllo
+        /// h*llo matches hllo and heeeello
+        /// h[ae]llo matches hello and hallo, but not hillo
+        /// h[^e]llo matches hallo, hbllo, ... but not hello
+        /// h[a-b]llo matches hallo and hbllo
+        /// Use \ to escape special characters if you want to match them verbatim.
+        /// </remarks>
+        /// <param name="token"><see cref="CancellationToken"/></param>
+        /// <returns><see cref="Task"/></returns>
+        public Task RemoveKeysAsync(string pattern, CancellationToken token = new CancellationToken());
+
+        /// <summary>
+        /// Remove all the keys which match the given pattern
+        /// </summary>
+        /// <param name="pattern">string pattern check out the remark</param>
+        /// <remarks>
+        /// Supported glob-style patterns:
+        /// h?llo matches hello, hallo and hxllo
+        /// h*llo matches hllo and heeeello
+        /// h[ae]llo matches hello and hallo, but not hillo
+        /// h[^e]llo matches hallo, hbllo, ... but not hello
+        /// h[a-b]llo matches hallo and hbllo
+        /// Use \ to escape special characters if you want to match them verbatim.
+        /// </remarks>
+        public void RemoveKeys(string pattern);
+
+        /// <summary>
+        /// Asynchronously Get the keys count which match the given pattern
+        /// </summary>
+        /// <param name="pattern">string pattern check out the remark</param>
+        /// <remarks>
+        /// Supported glob-style patterns:
+        /// h?llo matches hello, hallo and hxllo
+        /// h*llo matches hllo and heeeello
+        /// h[ae]llo matches hello and hallo, but not hillo
+        /// h[^e]llo matches hallo, hbllo, ... but not hello
+        /// h[a-b]llo matches hallo and hbllo
+        /// Use \ to escape special characters if you want to match them verbatim.
+        /// </remarks>
+        /// <param name="token"><see cref="CancellationToken"/></param>
+        /// <returns><see cref="IEnumerable{T}"/> of string a list of string of redis keys</returns>
+        public Task<long> GetKeysCountAsync(string pattern, CancellationToken token = new CancellationToken());
+
+
+        /// <summary>
+        /// Get the keys count which match the given pattern
+        /// </summary>
+        /// <param name="pattern">string pattern check out the remark</param>
+        /// <remarks>
+        /// Supported glob-style patterns:
+        /// h?llo matches hello, hallo and hxllo
+        /// h*llo matches hllo and heeeello
+        /// h[ae]llo matches hello and hallo, but not hillo
+        /// h[^e]llo matches hallo, hbllo, ... but not hello
+        /// h[a-b]llo matches hallo and hbllo
+        /// Use \ to escape special characters if you want to match them verbatim.
+        /// </remarks>
+        /// <returns><see cref="IEnumerable{T}"/> of string a list of string of redis keys</returns>
+        public long GetKeysCount(string pattern);
     }
 }

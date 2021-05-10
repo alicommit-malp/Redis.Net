@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
 using Microsoft.Extensions.Options;
 using Moq;
 using Redis.Net.Contracts;
@@ -254,6 +256,169 @@ namespace Redis.Net.Test
             //check if the key exist 
             var result2 = _redisService.IsKeyExist(keyName);
             Assert.False(result2);
+        }
+        
+        
+        [Fact]
+        public async Task GetKeysAsync_Success()
+        {
+            var keyName1 = KeyName() + "ali" + KeyName();
+            var keyName2 = KeyName() + "ali" + KeyName();
+            var keyName3 = KeyName() + "ali" + KeyName();
+            var keyName4 = KeyName() + "li" + KeyName();
+            var keyName5 = KeyName() + "al" + KeyName();
+
+            await _redisService.SetStringAsync(keyName1, "");
+            await _redisService.SetStringAsync(keyName2, "");
+            await _redisService.SetStringAsync(keyName3, "");
+            await _redisService.SetStringAsync(keyName4, "");
+            await _redisService.SetStringAsync(keyName5, "");
+
+            var result = await _redisService.GetKeysAsync("*ali*");
+
+            Assert.NotNull(result);
+            var enumerable = result.ToList();
+            Assert.NotNull(enumerable.FirstOrDefault(z => z.Contains(keyName1)));
+            Assert.NotNull(enumerable.FirstOrDefault(z => z.Contains(keyName2)));
+            Assert.NotNull(enumerable.FirstOrDefault(z => z.Contains(keyName3)));
+
+            await _redisService.RemoveAsync(keyName1);
+            await _redisService.RemoveAsync(keyName2);
+            await _redisService.RemoveAsync(keyName3);
+            await _redisService.RemoveAsync(keyName4);
+            await _redisService.RemoveAsync(keyName5);
+        }
+
+        [Fact]
+        public void GetKeys_Success()
+        {
+            var randomName = new Faker().Name.FirstName();
+            var anotherRandomName = new Faker().Name.FirstName();
+
+            var keyName1 = KeyName() + randomName + KeyName();
+            var keyName2 = KeyName() + randomName + KeyName();
+            var keyName3 = KeyName() + randomName + KeyName();
+            var keyName4 = KeyName() + anotherRandomName + KeyName();
+            var keyName5 = KeyName() + anotherRandomName + KeyName();
+
+            _redisService.SetString(keyName1, "");
+            _redisService.SetString(keyName2, "");
+            _redisService.SetString(keyName3, "");
+            _redisService.SetString(keyName4, "");
+            _redisService.SetString(keyName5, "");
+
+            var result = _redisService.GetKeys("*" + randomName + "*");
+
+            Assert.NotNull(result);
+            var enumerable = result.ToList();
+            Assert.NotNull(enumerable.FirstOrDefault(z => z.Contains(keyName1)));
+            Assert.NotNull(enumerable.FirstOrDefault(z => z.Contains(keyName2)));
+            Assert.NotNull(enumerable.FirstOrDefault(z => z.Contains(keyName3)));
+
+            _redisService.Remove(keyName1);
+            _redisService.Remove(keyName2);
+            _redisService.Remove(keyName3);
+            _redisService.Remove(keyName4);
+            _redisService.Remove(keyName5);
+        }
+
+        [Fact]
+        public async Task RemoveKeysAsync_Success()
+        {
+            var randomName = new Faker().Name.FirstName();
+
+            var keyName1 = KeyName() + randomName + KeyName();
+            var keyName2 = KeyName() + randomName + KeyName();
+            var keyName3 = KeyName() + randomName + KeyName();
+
+            await _redisService.SetStringAsync(keyName1, "");
+            await _redisService.SetStringAsync(keyName2, "");
+            await _redisService.SetStringAsync(keyName3, "");
+
+            await _redisService.RemoveKeysAsync("*" + randomName + "*");
+            var result = await _redisService.GetKeysAsync("*" + randomName + "*");
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void RemoveKeys_Success()
+        {
+            var randomName = new Faker().Name.FirstName();
+
+            var keyName1 = KeyName() + randomName + KeyName();
+            var keyName2 = KeyName() + randomName + KeyName();
+            var keyName3 = KeyName() + randomName + KeyName();
+
+            _redisService.SetString(keyName1, "");
+            _redisService.SetString(keyName2, "");
+            _redisService.SetString(keyName3, "");
+
+            _redisService.RemoveKeys("*" + randomName + "*");
+            var result = _redisService.GetKeys("*" + randomName + "*");
+
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+
+        [Fact]
+        public async Task GetKeysCountAsync_Success()
+        {
+            var randomName = new Faker().Name.FirstName();
+            var anotherRandomName = new Faker().Name.FirstName();
+
+            var keyName1 = KeyName() + randomName + KeyName();
+            var keyName2 = KeyName() + randomName + KeyName();
+            var keyName3 = KeyName() + randomName + KeyName();
+            var keyName4 = KeyName() + anotherRandomName + KeyName();
+            var keyName5 = KeyName() + anotherRandomName + KeyName();
+
+            await _redisService.SetStringAsync(keyName1, "");
+            await _redisService.SetStringAsync(keyName2, "");
+            await _redisService.SetStringAsync(keyName3, "");
+            await _redisService.SetStringAsync(keyName4, "");
+            await _redisService.SetStringAsync(keyName5, "");
+
+            var result = await _redisService.GetKeysCountAsync("*"+randomName+"*");
+
+            Assert.Equal(3, result);
+
+            await _redisService.RemoveAsync(keyName1);
+            await _redisService.RemoveAsync(keyName2);
+            await _redisService.RemoveAsync(keyName3);
+            await _redisService.RemoveAsync(keyName4);
+            await _redisService.RemoveAsync(keyName5);
+        }
+
+        [Fact]
+        public void GetKeysCount_Success()
+        {
+            var randomName = new Faker().Name.FirstName();
+            var anotherRandomName = new Faker().Name.FirstName();
+
+            var keyName1 = KeyName() + randomName + KeyName();
+            var keyName2 = KeyName() + randomName + KeyName();
+            var keyName3 = KeyName() + randomName + KeyName();
+            var keyName4 = KeyName() + anotherRandomName + KeyName();
+            var keyName5 = KeyName() + anotherRandomName + KeyName();
+
+            _redisService.SetString(keyName1, "");
+            _redisService.SetString(keyName2, "");
+            _redisService.SetString(keyName3, "");
+            _redisService.SetString(keyName4, "");
+            _redisService.SetString(keyName5, "");
+
+            var result = _redisService.GetKeysCount("*"+randomName+"*");
+
+            Assert.Equal(3, result);
+
+            _redisService.Remove(keyName1);
+            _redisService.Remove(keyName2);
+            _redisService.Remove(keyName3);
+            _redisService.Remove(keyName4);
+            _redisService.Remove(keyName5);
         }
     }
 }

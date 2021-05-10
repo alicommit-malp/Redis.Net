@@ -344,6 +344,121 @@ namespace Redis.Net.Core
 
             return await _cache.KeyExistsAsync(key);
         }
+        
+        
+        public async Task<IEnumerable<string>> GetKeysAsync(string pattern,
+            CancellationToken token = new CancellationToken())
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
+            await ConnectAsync(token);
+            token.ThrowIfCancellationRequested();
+
+            var result = await _cache.ScriptEvaluateAsync(LunaConstants.GetKeysByPatternScript,
+                null,
+                new RedisValue[]
+                {
+                    pattern,
+                });
+
+            return (string[]) result;
+        }
+
+        public IEnumerable<string> GetKeys(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
+            Connect();
+
+            var result = _cache.ScriptEvaluate(LunaConstants.GetKeysByPatternScript,
+                null,
+                new RedisValue[]
+                {
+                    pattern,
+                });
+
+            return (string[]) result;
+        }
+
+        public async Task RemoveKeysAsync(string pattern, CancellationToken token = new CancellationToken())
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
+            await ConnectAsync(token);
+            token.ThrowIfCancellationRequested();
+
+            await _cache.ScriptEvaluateAsync(LunaConstants.DelKeysByPatternScript,
+                null,
+                new RedisValue[]
+                {
+                    pattern,
+                });
+        }
+
+        public void RemoveKeys(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
+            Connect();
+
+            _cache.ScriptEvaluate(LunaConstants.DelKeysByPatternScript,
+                null,
+                new RedisValue[]
+                {
+                    pattern,
+                });
+        }
+
+        public async Task<long> GetKeysCountAsync(string pattern, CancellationToken token = new CancellationToken())
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
+            await ConnectAsync(token);
+            token.ThrowIfCancellationRequested();
+
+            var result = await _cache.ScriptEvaluateAsync(LunaConstants.GetKeysCountByPatternScript,
+                null,
+                new RedisValue[]
+                {
+                    pattern,
+                });
+
+            return (long) result;
+        }
+
+        public long GetKeysCount(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+
+            Connect();
+
+            var result = _cache.ScriptEvaluate(LunaConstants.GetKeysCountByPatternScript,
+                null,
+                new RedisValue[]
+                {
+                    pattern,
+                });
+
+            return (long) result;
+        }
 
         private static void MapMetadata(IReadOnlyList<RedisValue> results, out DateTimeOffset? absoluteExpiration,
             out TimeSpan? slidingExpiration)

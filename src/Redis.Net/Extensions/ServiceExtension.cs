@@ -85,7 +85,7 @@ namespace Redis.Net.Extensions
                     $"Using both {nameof(RedisCacheOptions.Configuration)} " +
                     $"and {nameof(RedisCacheOptions.ConfigurationOptions)} at the same time is not allowed!");
 
-            var adessoRedisOptionAction = new Action<RedisCacheOptions>(options =>
+            var redisOptionAction = new Action<RedisCacheOptions>(options =>
             {
                 options.InstanceName = redisCacheOptions.InstanceName;
                 options.ConfigurationOptions = redisCacheOptions.ConfigurationOptions;
@@ -93,7 +93,7 @@ namespace Redis.Net.Extensions
             });
 
             services.AddOptions();
-            services.Configure(nameof(DefaultRedis), adessoRedisOptionAction);
+            services.Configure(nameof(DefaultRedis), redisOptionAction);
 
             services.TryAdd(new ServiceDescriptor(typeof(IRedisService), typeof(RedisService<DefaultRedis>),
                 redisCacheOptions.ServiceLifetimeScope));

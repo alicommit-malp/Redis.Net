@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -13,21 +14,25 @@ namespace Redis.Net.Services
     {
         private readonly IDistributedCacheInternal _distributedCacheInternal;
         private readonly ISerializer _serializer = new Serializer();
+        private readonly ICompressor _compressor;
 
         /// <summary>
-        ///  Redis service constructor 
+        /// Redis service constructor 
         /// </summary>
-        /// <param name="cacheOptions"><see cref="CacheOptions"/></param>
-        public RedisService(IOptionsMonitor<RedisCacheOptions> cacheOptions)
+        /// <param name="redisCacheOptions"><see cref="RedisCacheOptions"/></param>
+        public RedisService(IOptionsMonitor<RedisCacheOptions> redisCacheOptions)
         {
+            var options = redisCacheOptions.Get(typeof(TInstance).Name);
+            _compressor = new Compressor(options.CompressionOption);
             _distributedCacheInternal =
-                RedisCacheInternalFactory.Get<TInstance>(cacheOptions.Get(typeof(TInstance).Name));
+                RedisCacheInternalFactory.Get<TInstance>(options);
         }
 
         /// <inheritdoc />
         public T GetString<T>(string key)
         {
             var result = _distributedCacheInternal.GetString(key);
+            result = _compressor.DeCompress(result);
             return _serializer.ConvertFromString<T>(result);
         }
 
@@ -35,6 +40,7 @@ namespace Redis.Net.Services
         public async Task<T> GetStringAsync<T>(string key, CancellationToken token = new CancellationToken())
         {
             var result = await _distributedCacheInternal.GetStringAsync(key, token);
+            result = await _compressor.DeCompressAsync(result, token);
             return _serializer.ConvertFromString<T>(result);
         }
 
@@ -117,29 +123,69 @@ namespace Redis.Net.Services
             return _distributedCacheInternal.IsKeyExistAsync(key, token);
         }
 
+        /// <inheritdoc />
+        public Task<IEnumerable<string>> GetKeysAsync(string pattern, CancellationToken token = new CancellationToken())
+        {
+            return _distributedCacheInternal.GetKeysAsync(pattern, token);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<string> GetKeys(string pattern)
+        {
+            return _distributedCacheInternal.GetKeys(pattern);
+        }
+
+        /// <inheritdoc />
+        public Task<long> GetKeysCountAsync(string pattern, CancellationToken token = new CancellationToken())
+        {
+            return _distributedCacheInternal.GetKeysCountAsync(pattern, token);
+        }
+
+        /// <inheritdoc />
+        public long GetKeysCount(string pattern)
+        {
+            return _distributedCacheInternal.GetKeysCount(pattern);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveKeysAsync(string pattern, CancellationToken token = new CancellationToken())
+        {
+            return _distributedCacheInternal.RemoveKeysAsync(pattern, token);
+        }
+
+        /// <inheritdoc />
+        public void RemoveKeys(string pattern)
+        {
+            _distributedCacheInternal.RemoveKeys(pattern);
+        }
+
 
         /// <inheritdoc />
         public string GetString(string key)
         {
-            return _distributedCacheInternal.GetString(key);
+            var result = _distributedCacheInternal.GetString(key);
+            return _compressor.DeCompress(result);
         }
 
         /// <inheritdoc />
-        public Task<string> GetStringAsync(string key, CancellationToken token = new CancellationToken())
+        public async Task<string> GetStringAsync(string key, CancellationToken token = new CancellationToken())
         {
-            return _distributedCacheInternal.GetStringAsync(key, token);
+            var result = await _distributedCacheInternal.GetStringAsync(key, token);
+            return await _compressor.DeCompressAsync(result, token);
         }
 
         /// <inheritdoc />
-        public Task<bool> SetStringAsync(string key, string value, TimeSpan? timeSpan = null,
+        public async Task<bool> SetStringAsync(string key, string value, TimeSpan? timeSpan = null,
             CancellationToken token = default)
         {
-            return _distributedCacheInternal.SetStringAsync(key, value, timeSpan, token);
+            value = await _compressor.CompressAsync(value, token);
+            return await _distributedCacheInternal.SetStringAsync(key, value, timeSpan, token);
         }
 
         /// <inheritdoc />
         public bool SetString(string key, string value, TimeSpan? timeSpan = null)
         {
+            value = _compressor.Compress(value);
             return _distributedCacheInternal.SetString(key, value, timeSpan);
         }
 

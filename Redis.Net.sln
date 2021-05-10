@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{72EF421B-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Net.Test", "test\Redis.Net.Test\Redis.Net.Test.csproj", "{F266345B-EC68-4085-874D-130D8CBFE991}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis.Net.Benchmark", "test\Redis.Net.Benchmark\Redis.Net.Benchmark.csproj", "{970EFE51-4082-4F04-9373-69009544E39D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,9 +50,22 @@ Global
 		{F266345B-EC68-4085-874D-130D8CBFE991}.Release|x64.Build.0 = Release|Any CPU
 		{F266345B-EC68-4085-874D-130D8CBFE991}.Release|x86.ActiveCfg = Release|Any CPU
 		{F266345B-EC68-4085-874D-130D8CBFE991}.Release|x86.Build.0 = Release|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Debug|x64.Build.0 = Debug|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Debug|x86.Build.0 = Debug|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Release|x64.ActiveCfg = Release|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Release|x64.Build.0 = Release|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Release|x86.ActiveCfg = Release|Any CPU
+		{970EFE51-4082-4F04-9373-69009544E39D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{67F87122-6C55-4303-A80B-94F52C22E3E2} = {F8C846BC-9BD3-429D-AA75-6F2078013815}
 		{F266345B-EC68-4085-874D-130D8CBFE991} = {72EF421B-19F5-4127-B4F3-DE55F296335F}
+		{970EFE51-4082-4F04-9373-69009544E39D} = {72EF421B-19F5-4127-B4F3-DE55F296335F}
 	EndGlobalSection
 EndGlobal
