@@ -2,7 +2,24 @@
 
 # New Features
 
-- Compression
+- Compression (increase your heavy redis calls performance by 50%)
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    var redis2ConfigurationOptions = ConfigurationOptions.Parse("localhost:6379");
+    redis2ConfigurationOptions.ReconnectRetryPolicy = new ExponentialRetry(1000);
+    services.AddRedisDotNet(new RedisCacheOptions()
+    {
+        ConfigurationOptions = redis2ConfigurationOptions,
+        CompressionOption = new CompressionOption()
+        {
+            TriggerByteSize = 100 * 1024
+        }
+    });
+}
+```
+When the value size of a redis key exceeds 100 Kilo-Bytes it will apply gzip compression algorithm to decrease the size and automatically upon retrieval it will decompress it so the whole process is transparent from the client's perspective. The compression will decrease the size of the data packets through the network therefore the performances of the redis call will increase by 50%.
+
 - Key deletion with regex
 
 # Compression Benchmark Results
@@ -15,15 +32,6 @@ Intel Core i7-9750H CPU 2.60GHz, 1 CPU, 12 logical and 6 physical cores
 
 
 ```
-## Local Redis
-
-|                      Method |     Mean |    Error |   StdDev |     Gen 0 |     Gen 1 |    Gen 2 | Allocated |
-|---------------------------- |---------:|---------:|---------:|----------:|----------:|---------:|----------:|
-|    WithCompressionBenchmark | 36.86 ms | 0.654 ms | 0.612 ms | 1142.8571 | 1000.0000 | 928.5714 |   4.83 MB |
-| WithoutCompressionBenchmark | 24.96 ms | 0.490 ms | 0.545 ms |  375.0000 |  218.7500 | 218.7500 |   2.25 MB |
-
-
-## Remote Redis
 |                      Method |       Mean |    Error |   StdDev | Gen 0 | Gen 1 | Gen 2 | Allocated |
 |---------------------------- |-----------:|---------:|---------:|------:|------:|------:|----------:|
 |    WithCompressionBenchmark |   668.2 ms | 13.34 ms | 27.24 ms |     - |     - |     - |   4.88 MB |
