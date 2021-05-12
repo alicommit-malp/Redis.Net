@@ -27,7 +27,7 @@ namespace Redis.Net.Core
         public async Task<string> CompressAsync(string str, CancellationToken cancellationToken = default)
         {
             if (_compressionOption is null) return str;
-            if (string.IsNullOrEmpty(str)) return string.Empty;
+            if (string.IsNullOrEmpty(str)) return str;
             if (!IsCompressionRequired(str)) return str;
 
             var bytes = Encoding.UTF8.GetBytes(str);
@@ -52,7 +52,7 @@ namespace Redis.Net.Core
         public string Compress(string str)
         {
             if (_compressionOption is null) return str;
-            if (string.IsNullOrEmpty(str)) return string.Empty;
+            if (string.IsNullOrEmpty(str)) return str;
             if (!IsCompressionRequired(str)) return str;
 
             var bytes = Encoding.UTF8.GetBytes(str);
@@ -96,7 +96,7 @@ namespace Redis.Net.Core
         public async Task<string> DeCompressAsync(string str, CancellationToken cancellationToken = default)
         {
             if (_compressionOption is null) return str;
-            if (string.IsNullOrEmpty(str)) return string.Empty;
+            if (string.IsNullOrEmpty(str)) return str;
             var fromBase64Bytes = FromBase64(str);
             if (fromBase64Bytes == null) return str;
 
@@ -114,7 +114,7 @@ namespace Redis.Net.Core
         public string DeCompress(string str)
         {
             if (_compressionOption is null) return str;
-            if (string.IsNullOrEmpty(str)) return string.Empty;
+            if (string.IsNullOrEmpty(str)) return str;
             var fromBase64Bytes = FromBase64(str);
             if (fromBase64Bytes == null) return str;
 
