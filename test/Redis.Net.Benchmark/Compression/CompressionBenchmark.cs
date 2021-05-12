@@ -37,13 +37,14 @@ namespace Redis.Net.Benchmark.Compression
             //docker run --name some-redis -d -p 6379:6379  redis redis-server --appendonly yes
             var configurationOptions = ConfigurationOptions.Parse(_redisConnectionString);
             configurationOptions.ReconnectRetryPolicy = new ExponentialRetry(1000);
+            var compressionOptions = new CompressionOption()
+            {
+                TriggerByteSize = 100 * 1024
+            };
             var options = new RedisCacheOptions()
             {
                 ConfigurationOptions = configurationOptions,
-                CompressionOption = new CompressionOption()
-                {
-                    TriggerByteSize = 100 * 1024
-                }
+                CompressionOption = compressionOptions
             };
             var mockWithCompression = new Mock<IOptionsMonitor<RedisCacheOptions>>();
             mockWithCompression.Setup(m => m.Get(nameof(CompressionBenchmark))).Returns(options);
@@ -69,7 +70,7 @@ namespace Redis.Net.Benchmark.Compression
             _personJsonString = JsonConvert.SerializeObject(persons);
 
             //prepare the gzipped Base64 data
-            _gzippedBase64String = File.ReadAllText(Path.Combine(dataPath, PersonJsonGzipBase64FileName));
+            _gzippedBase64String = $"{compressionOptions.Base64Prefix}{File.ReadAllText(Path.Combine(dataPath, PersonJsonGzipBase64FileName))}";
         }
 
         [Benchmark]

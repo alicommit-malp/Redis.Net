@@ -21,14 +21,15 @@ namespace Redis.Net.Test.WithCompression
 
         public CompressorUnitTest()
         {
-            _compressor = new Compressor(new CompressionOption()
+            var compressionOptions = new CompressionOption()
             {
                 TriggerByteSize = 100 * 1024
-            });
+            };
+            _compressor = new Compressor(compressionOptions);
 
             var dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!);
             _personJsonString = File.ReadAllText(Path.Combine(dataPath, PersonJsonFileName));
-            _personBase64GzippedString = File.ReadAllText(Path.Combine(dataPath, PersonJsonGzipBase64FileName));
+            _personBase64GzippedString =  $"{compressionOptions.Base64Prefix}{File.ReadAllText(Path.Combine(dataPath, PersonJsonGzipBase64FileName))}";
         }
 
         [Fact]

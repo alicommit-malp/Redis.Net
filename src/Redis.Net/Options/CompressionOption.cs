@@ -12,5 +12,10 @@ namespace Redis.Net.Options
         /// </remarks>
         /// </summary>
         public int TriggerByteSize { get; set; }
+        
+        /// <summary>
+        /// Prefix to detect the base64 strings 
+        /// </summary>
+        public string Base64Prefix { get; set; } = "####BASE64####";
     }
 }

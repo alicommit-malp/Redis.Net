@@ -838,7 +838,10 @@ namespace Redis.Net.Core
         public string GetString(string key)
         {
             Connect();
-            return _cache.StringGet(_instance + key);
+            var result = _cache.StringGet(_instance + key);
+            
+            if (result.IsNull) return null;
+            return result;
         }
 
         /// <inheritdoc />
@@ -847,7 +850,10 @@ namespace Redis.Net.Core
             await ConnectAsync(token);
             token.ThrowIfCancellationRequested();
 
-            return await _cache.StringGetAsync(key);
+            var result =await _cache.StringGetAsync(key);
+            
+            if (result.IsNull) return null;
+            return result;
         }
     }
 }

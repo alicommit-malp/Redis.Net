@@ -11,6 +11,28 @@ namespace Redis.Net.Contracts
     /// </summary>
     public interface IRedisService : IDistributedCacheString
     {
+      
+        /// <summary>
+        /// Gets a value with the given key if the key not exist inform the client 
+        /// <remarks>Which has been set with <see cref="IDistributedCacheString.SetStringAsync"/>
+        /// or <see cref="IDistributedCacheString.SetString"/>
+        /// </remarks>
+        /// </summary>
+        /// <param name="key">A string identifying the requested value.</param>
+        /// <returns>The located value or null.</returns>
+        public (bool key,T value) GetStringIfExist<T>(string key);
+
+        /// <summary>
+        /// Gets a value with the given key if the key not exist inform the client 
+        /// <remarks>Which has been set with <see cref="IDistributedCacheString.SetStringAsync"/>
+        /// or <see cref="IDistributedCacheString.SetString"/>
+        /// </remarks>
+        /// </summary>
+        /// <param name="key">A string identifying the requested value.</param>
+        /// <param name="token">Optional. The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the located value or null.</returns>
+        public Task<(bool key,T value)> GetStringIfExistAsync<T>(string key, CancellationToken token = new CancellationToken());
+        
         /// <summary>
         /// Gets a value with the given key.
         /// <remarks>Which has been set with <see cref="IDistributedCacheString.SetStringAsync"/>

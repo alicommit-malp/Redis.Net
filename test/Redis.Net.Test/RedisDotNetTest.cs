@@ -50,6 +50,30 @@ namespace Redis.Net.Test
 
             Assert.Equal(keyValue, result);
         }
+        
+        [Fact]
+        public void GetStringIfExist_ReturnsKeyExistFalse_IfTheKeysDoesNotExist()
+        {
+            var keyName = KeyName();
+            _redisService.Remove(keyName);
+            const string keyValue = "1.0";
+            var (key, value) = _redisService.GetStringIfExist<string>(keyName);
+            Assert.False(key);
+            Assert.Null(value);
+        }
+
+        [Fact]
+        public void GetStringIfExist_ReturnsKeyExistTrue_IfTheKeyExists()
+        {
+            var keyName = KeyName();
+            _redisService.Remove(keyName);
+            const string keyValue = "1.0";
+            _redisService.SetString(keyName, keyValue);
+            var (key, value) = _redisService.GetStringIfExist<string>(keyName);
+            Assert.True(key);
+            Assert.Equal(keyValue,value);
+            _redisService.Remove(keyName);
+        }
 
         [Fact]
         public void SetStringGetStringRedisTest()

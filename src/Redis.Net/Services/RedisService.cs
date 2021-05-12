@@ -29,6 +29,25 @@ namespace Redis.Net.Services
         }
 
         /// <inheritdoc />
+        public (bool key, T value) GetStringIfExist<T>(string key)
+        {
+            var result = _distributedCacheInternal.GetString(key);
+            if (result is null) return (false, default);
+            result = _compressor.DeCompress(result);
+            return (true, _serializer.ConvertFromString<T>(result));
+        }
+
+        /// <inheritdoc />
+        public async Task<(bool key, T value)> GetStringIfExistAsync<T>(string key,
+            CancellationToken token = new CancellationToken())
+        {
+            var result = await _distributedCacheInternal.GetStringAsync(key, token);
+            if (result is null) return (false, default);
+            result = await _compressor.DeCompressAsync(result, token);
+            return (true,_serializer.ConvertFromString<T>(result));
+        }
+
+        /// <inheritdoc />
         public T GetString<T>(string key)
         {
             var result = _distributedCacheInternal.GetString(key);

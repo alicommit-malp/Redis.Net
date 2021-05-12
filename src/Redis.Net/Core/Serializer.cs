@@ -10,7 +10,7 @@ namespace Redis.Net.Core
         /// <inheritdoc />
         public T ConvertFromString<T>(string value)
         {
-            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            return string.IsNullOrEmpty(value) ? default(T) : JsonConvert.DeserializeObject<T>(value);
         }
 
         /// <inheritdoc />

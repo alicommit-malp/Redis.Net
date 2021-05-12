@@ -14,7 +14,7 @@
         <RepositoryType>GIT</RepositoryType>
         <PackageTags>Redis </PackageTags>
         <PackageId>RedisNet</PackageId>
-        <PackageVersion>1.1.0</PackageVersion>
+        <PackageVersion>1.1.1</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

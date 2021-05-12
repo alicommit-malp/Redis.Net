@@ -7,7 +7,7 @@ namespace Redis.Net.Options
     /// </summary>
     public class CacheOptions
     {
-        private TimeSpan? _absoluteExpirationRelativeToNow;
+        private readonly TimeSpan? _absoluteExpirationRelativeToNow;
         private TimeSpan? _slidingExpiration;
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Redis.Net.Options
         public TimeSpan? AbsoluteExpirationRelativeToNow
         {
             get => _absoluteExpirationRelativeToNow;
-            set
+            init
             {
                 if (value <= TimeSpan.Zero)
                 {

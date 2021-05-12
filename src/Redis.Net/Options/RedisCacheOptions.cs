@@ -14,6 +14,6 @@ namespace Redis.Net.Options
         /// <summary>
         /// <see cref="CompressionOption"/>
         /// </summary>
-        public CompressionOption CompressionOption { get; set; }
+        public CompressionOption CompressionOption { get; init; }
     }
 }

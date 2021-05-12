@@ -39,7 +39,7 @@ namespace Redis.Net.Core
                 CopyTo(inputStream, gZipStream);
             }
 
-            return Convert.ToBase64String(outputStream.ToArray());
+            return $"{_compressionOption.Base64Prefix}{Convert.ToBase64String(outputStream.ToArray())}";
         }
 
         private bool IsCompressionRequired(string str)
@@ -64,7 +64,7 @@ namespace Redis.Net.Core
                 CopyTo(inputStream, gZipStream);
             }
 
-            return Convert.ToBase64String(outputStream.ToArray());
+            return $"{_compressionOption.Base64Prefix}{Convert.ToBase64String(outputStream.ToArray())}";
         }
 
         private static void CopyTo(Stream sourceStream, Stream destinationStream)
@@ -77,11 +77,13 @@ namespace Redis.Net.Core
             }
         }
 
-        private static byte[] FromBase64(string str)
+        private byte[] FromBase64(string str)
         {
             byte[] result = null;
             try
             {
+                if (!str.StartsWith(_compressionOption.Base64Prefix)) return null;
+                str = str.Remove(0, _compressionOption.Base64Prefix.Length);
                 result = Convert.FromBase64String(str);
             }
             catch (Exception)
